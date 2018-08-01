@@ -1,0 +1,4 @@
+﻿{
+  "databaseConfiguration": { "connectionString": "pluto" },
+  "smtpConfiguration": { "hostName": "nomeHost", "port": "25", "userName":  "utente", "password": "pswd"  }  
+}
