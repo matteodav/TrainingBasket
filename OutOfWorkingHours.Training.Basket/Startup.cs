@@ -17,6 +17,7 @@ namespace OutOfWorkingHours.Training.Basket
         private IHostingEnvironment env;
 
 
+
         public Startup(IHostingEnvironment env)
         {
             this.env = env;
@@ -25,27 +26,36 @@ namespace OutOfWorkingHours.Training.Basket
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvcCore();
 
+            var builder = new ConfigurationBuilder()
+               .SetBasePath(Path.Combine(this.env.ContentRootPath, @"Configurations"))
+               .AddJsonFile("ConfigurationSettings.json", false)
+               .AddJsonFile($"ConfigurationSettings.{this.env.EnvironmentName}.json", true)
+               .Build();
+
+            var config = new Configuration();
+            builder.Bind(config);
+
+            services.AddSingleton(typeof(Classes.IConfiguration), config);
         }
 
         
 
         public void Configure(IApplicationBuilder app)
-        {           
+        {
+            if(!this.env.IsProduction())
+                app.UseDeveloperExceptionPage();
+
             app.UseStaticFiles();
-
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Path.Combine(this.env.ContentRootPath, @"Configurations"))
-                .AddJsonFile(string.Concat(@"ConfigurationSettings.", this.env.EnvironmentName, @".json"))
-                .Build();
-
-            var config = new Configuration();
-            builder.Bind(config);
+            app.UseMvcWithDefaultRoute();
+                        
+           
             
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            //app.Run(async (context) =>
+            //{
+            //    await context.Response.WriteAsync("Hello World!");
+            //});
 
 
         }
