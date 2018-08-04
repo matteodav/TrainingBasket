@@ -14,9 +14,7 @@ namespace OutOfWorkingHours.Training.Basket
 {
     public class Startup
     {
-        private IHostingEnvironment env;
-
-
+        private IHostingEnvironment env;        
 
         public Startup(IHostingEnvironment env)
         {
